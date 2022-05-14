@@ -47,4 +47,41 @@ class FilterableTransactionListViewModelTests: XCTestCase {
         // then
         XCTAssertEqual(viewModel.filteredTransactions.count, 3)
     }
+    
+    func test_viewModel_calculatesTheTotal_whenACategoryHasBeenSelected() {
+        // given
+        let viewModel = FilterableTransactionListViewModel(
+            transactions: MockModelData.buildWith2Categories()
+        )
+        let entertainment = TransactionListMockBuilder.makeFilter(.entertainment)
+        
+        // when
+        viewModel.selectCategory(entertainment)
+        
+        // then
+        XCTAssertEqual(viewModel.amount, "$82.99")
+    }
+    
+    func test_viewModel_calculatesTheTotal_whenAllCategoriesAreSelected() {
+        // given
+        let viewModel = FilterableTransactionListViewModel(
+            transactions: MockModelData.buildWith2Categories()
+        )
+        
+        let allCategory = TransactionListMockBuilder.makeAllFilter()
+        viewModel.selectCategory(allCategory)
+        
+        // then
+        XCTAssertEqual(viewModel.amount, "$144.10")
+    }
+    
+    func test_viewModel_calculatesTheTotalForAllCategories_priorToAnySelection() {
+        // given
+        let viewModel = FilterableTransactionListViewModel(
+            transactions: MockModelData.buildWith2Categories()
+        )
+    
+        // then
+        XCTAssertEqual(viewModel.amount, "$144.10")
+    }
 }
